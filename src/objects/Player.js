@@ -190,9 +190,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.playAnim('death', true);
 
         this.scene.time.delayedCall(1500, () => {
-            this.scene.scene.restart({
-                soldadoElegido: this.scene.soldadoElegido
-            });
+            if (this.scene.gameOver) {
+                this.scene.gameOver();
+            } else {
+                this.scene.scene.start('MenuScene');
+            }
         });
     }
 }
