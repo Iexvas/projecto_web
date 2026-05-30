@@ -6,9 +6,9 @@ export class Level1 extends Phaser.Scene {
         super({ key: 'Level1' });
     }
 
-    // El método init se ejecuta antes de preload y sirve para recibir datos de otras escenas
+    // Sirve para recibir datos de otras escenas
     init(data) {
-        // Aquí capturamos el índice del soldado seleccionado (0, 1, 2 o 3)
+        // Se captura el índice del soldado seleccionado (0, 1, 2 o 3)
         this.soldadoElegido = data.soldadoElegido || 0; 
         console.log("Iniciando misión con el comando tipo:", this.soldadoElegido);
     }
@@ -16,6 +16,9 @@ export class Level1 extends Phaser.Scene {
     preload() {
         // Cargar el fondo desde la carpeta
         this.load.image('fondo_selva', '/src/assets/levels/selva.png');
+
+        // Cargar el sonido de fondo para el nivel
+        this.load.audio('nivel1_music', '/src/assets/audio/theme_level1.mp3');
 
         // Marcador de posicion temporal para el jugador
         const canvas = document.createElement('canvas');
@@ -32,6 +35,14 @@ export class Level1 extends Phaser.Scene {
 
         // Renderizar el fondo de la selva
         this.background = this.add.image(800, 360, 'fondo_selva');
+
+        // Reproducir música de fondo para el nivel
+        this.musicaNivel1 = this.sound.add('nivel1_music', {
+            loop: true,
+            volume: 0.5
+        });
+        // Iniciar la reproducción de la música del nivel
+        this.musicaNivel1.play();
 
         // Instanciamos a nuestro jugador en el centro superior de la pantalla
         this.player = new Player(this, 100, 400);

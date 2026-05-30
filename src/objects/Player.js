@@ -19,22 +19,31 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Configurar las teclas de control (Flechas del teclado)
         this.cursors = scene.input.keyboard.createCursorKeys();
+
+        // configurar WSAD como teclas alternativas
+        this.keys = scene.input.keyboard.addKeys({
+            up: Phaser.Input.Keyboard.KeyCodes.W,
+            left: Phaser.Input.Keyboard.KeyCodes.A,
+            down: Phaser.Input.Keyboard.KeyCodes.S,
+            right: Phaser.Input.Keyboard.KeyCodes.D
+        });
     }
 
     update() {
-        // Lógica de movimiento horizontal (Izquierda / Derecha)
-        if (this.cursors.left.isDown) {
+        const leftPressed = this.cursors.left.isDown || this.keys.left.isDown;
+        const rightPressed = this.cursors.right.isDown || this.keys.right.isDown;
+        const jumpPressed = this.cursors.up.isDown || this.keys.up.isDown;
+        if (leftPressed) {
             this.setVelocityX(-this.speed);
-            this.setFlipX(true); // Voltea el sprite a la izquierda
-        } else if (this.cursors.right.isDown) {
+            this.setFlipX(true);
+        } else if (rightPressed) {
             this.setVelocityX(this.speed);
-            this.setFlipX(false); // Voltea el sprite a la derecha
+            this.setFlipX(false);
         } else {
-            this.setVelocityX(0); // Detenerse si no se presiona nada
+            this.setVelocityX(0);
         }
-
-        // Lógica de salto: Solo si está tocando el suelo o una plataforma
-        if (this.cursors.up.isDown && this.body.blocked.down) {
+    
+        if (jumpPressed && this.body.blocked.down) {
             this.setVelocityY(this.jumpForce);
         }
     }
