@@ -9,7 +9,7 @@ export class Intro extends Phaser.Scene {
         // Cargar el video de introducción
         this.load.video('introVideo', '/src/assets/ui/intro.mp4', 'loadeddata', false, false);
         // Cargar el audio del video de introducción
-        this.load.audio('introAudio', '/src/assets/ui/intro.aac');
+        this.load.audio('introAudio', '/src/assets/audio/intro.aac');
     
     }
 
