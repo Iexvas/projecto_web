@@ -1,6 +1,8 @@
 import { BaseLevel } from './BaseLevel.js';
 import fondoRuinas from '../assets/levels/ruinas.png';
-import nivel2Music from '../assets/audio/theme_level2.mp3'; 
+import groundLevel2 from '../assets/tiles/ground_level2.jpg';
+import portalLevel2 from '../assets/tiles/portal_level2.png';
+import nivel2Music from '../assets/audio/theme_level2.mp3';
 
 export class Level2 extends BaseLevel {
     constructor() {
@@ -8,7 +10,11 @@ export class Level2 extends BaseLevel {
             key: 'Level2',
             backgroundKey: 'fondo_ruinas',
             backgroundImage: fondoRuinas,
-            musicFile: nivel2Music, 
+            groundKey: 'ground_level2',
+            groundImage: groundLevel2,
+            portalKey: 'portal_level2',
+            portalImage: portalLevel2,
+            musicFile: nivel2Music,
             nextScene: 'Level3',
             levelTitle: 'NIVEL 2 - RUINAS EN LA SELVA',
             completeMessage: 'RUINAS ASEGURADAS',

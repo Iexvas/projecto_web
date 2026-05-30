@@ -5,6 +5,8 @@ import { Enemy } from '../objects/Enemy.js';
 // import nivelMusic from '../assets/audio/theme_level1.mp3';
 import muteButton from '../assets/ui/mute.png';
 import enemyMachete from '../assets/enemies/enemy_machete.png';
+import heartIcon from '../assets/tiles/heart.png';
+import scoreIcon from '../assets/tiles/score.png';
 
 import eloyIdle from '../assets/characters/eloy/eloy_idle.png';
 import eloyRun from '../assets/characters/eloy/eloy_run.png';
@@ -19,6 +21,10 @@ export class BaseLevel extends Phaser.Scene {
         this.levelKey = config.key;
         this.backgroundKey = config.backgroundKey;
         this.backgroundImage = config.backgroundImage;
+        this.groundKey = config.groundKey;
+        this.groundImage = config.groundImage;
+        this.portalKey = config.portalKey;
+        this.portalImage = config.portalImage;
 
         // Archivo de musica
         this.musicFile = config.musicFile;
@@ -49,6 +55,8 @@ export class BaseLevel extends Phaser.Scene {
 
     preload() {
         this.load.image(this.backgroundKey, this.backgroundImage);
+        this.load.image(this.groundKey, this.groundImage);
+        this.load.image(this.portalKey, this.portalImage);
 
         // Cargar la musica del nivel
         this.musicKey = this.levelKey.toLowerCase() + '_music'; 
@@ -56,6 +64,8 @@ export class BaseLevel extends Phaser.Scene {
         
         this.load.image('mute_button', muteButton);
         this.load.image('enemy_machete', enemyMachete);
+        this.load.image('heart_icon', heartIcon);
+        this.load.image('score_icon', scoreIcon);
 
         this.load.spritesheet('eloy_idle_sheet', eloyIdle, {
             frameWidth: 512,
@@ -88,6 +98,7 @@ export class BaseLevel extends Phaser.Scene {
         this.crearAnimaciones();
 
         this.physics.world.setBounds(0, 0, 2400, 600);
+        this.physics.world.drawDebug = true; // Deshabilitado por defecto
 
         this.add.image(0, 0, this.backgroundKey)
             .setOrigin(0, 0)
@@ -104,9 +115,26 @@ export class BaseLevel extends Phaser.Scene {
 
         this.platforms = this.physics.add.staticGroup();
 
-        const ground = this.add.rectangle(1200, 555, 2400, 40, 0x34495e);
-        ground.setAlpha(0);
-        this.platforms.add(ground);
+        // Crear múltiples tiles del suelo
+        const tileWidth = 150;
+        const tileHeight = 80;
+        const groundY = 580;
+        const totalWidth = 2400;
+        const numTiles = Math.ceil(totalWidth / tileWidth);
+
+        for (let i = 0; i < numTiles; i++) {
+            const x = i * tileWidth + tileWidth / 2;
+            
+            // Agregar imagen del tile
+            this.add.image(x, groundY, this.groundKey)
+                .setOrigin(0.5, 0.5)
+                .setDisplaySize(tileWidth, tileHeight);
+            
+            // Agregar cuerpo físico
+            const tilePhysics = this.add.rectangle(x, groundY - 2, tileWidth, tileHeight, 0x34495e);
+            tilePhysics.setAlpha(0);
+            this.platforms.add(tilePhysics);
+        }
 
         this.player = new Player(this, 180, 400, this.characterKey);
         this.physics.add.collider(this.player, this.platforms);
@@ -212,7 +240,12 @@ export class BaseLevel extends Phaser.Scene {
     }
 
     crearMetaNivel() {
-        this.metaNivel = this.add.rectangle(this.metaX, 420, 80, 260, 0x00ff00, 0);
+        // Crear imagen del portal
+        this.metaNivel = this.add.image(this.metaX, 420, this.portalKey)
+            .setOrigin(0.5, 0.5)
+            .setDisplaySize(80, 260);
+        
+        // Agregar física al portal
         this.physics.add.existing(this.metaNivel, true);
 
         this.physics.add.overlap(
@@ -293,28 +326,36 @@ export class BaseLevel extends Phaser.Scene {
     }
 
     crearHUD() {
-        this.hudVida = this.add.text(20, 20, 'VIDA: 3', {
-            fontSize: '22px',
-            fontFamily: 'Arial',
-            fill: '#ffffff',
-            backgroundColor: '#000000',
-            padding: {
-                x: 8,
-                y: 4
-            }
+        // --- VIDA ---
+        // Icono de corazón
+        this.add.image(30, 20, 'heart_icon')
+            .setOrigin(0.5, 0.5)
+            .setScale(0.06)
+            .setScrollFactor(0)
+            .setDepth(999);
+
+        // Texto de vida
+        this.hudVida = this.add.text(55, 20, `${this.health}/3`, {
+            fontSize: '20px',
+            fontFamily: 'Arial Black',
+            fill: '#000000'
         })
         .setScrollFactor(0)
         .setDepth(999);
 
-        this.hudPuntos = this.add.text(20, 55, `PUNTOS: ${this.score}`, {
-            fontSize: '22px',
-            fontFamily: 'Arial',
-            fill: '#ffffff',
-            backgroundColor: '#000000',
-            padding: {
-                x: 8,
-                y: 4
-            }
+        // --- PUNTOS ---
+        // Icono de puntos
+        this.add.image(30, 67, 'score_icon')
+            .setOrigin(0.5, 0.5)
+            .setScale(0.04)
+            .setScrollFactor(0)
+            .setDepth(999);
+
+        // Texto de puntos
+        this.hudPuntos = this.add.text(70, 60, `${this.score}`, {
+            fontSize: '20px',
+            fontFamily: 'Arial Black',
+            fill: '#000000'
         })
         .setScrollFactor(0)
         .setDepth(999);
@@ -322,11 +363,11 @@ export class BaseLevel extends Phaser.Scene {
 
     actualizarHUD() {
         if (this.hudVida && this.player) {
-            this.hudVida.setText(`VIDA: ${this.player.health}`);
+            this.hudVida.setText(`${this.player.health}/3`);
         }
 
         if (this.hudPuntos) {
-            this.hudPuntos.setText(`PUNTOS: ${this.score}`);
+            this.hudPuntos.setText(`${this.score}`);
         }
     }
 
