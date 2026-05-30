@@ -417,43 +417,47 @@ export class BaseLevel extends Phaser.Scene {
     }
 
     gameOver() {
-    this.nivelCompletado = true;
+        this.nivelCompletado = true;
 
-    // Reproducir efecto de sonido de game over
-    this.sound.play('sfx_gameover', { volume: 0.8 });
-
-    this.physics.pause();
-
-    this.add.text(400, 230, 'GAME OVER', {
-        fontSize: '52px',
-        fontFamily: 'Arial',
-        fill: '#ff3333',
-        backgroundColor: '#000000',
-        padding: {
-            x: 18,
-            y: 10
+        // Reproducir efecto de sonido de game over
+        this.sound.play('sfx_gameover', { volume: 0.9 });
+        // Detener música del nivel
+        if (this.musicaNivel) {
+            this.musicaNivel.stop();
         }
-    })
-    .setOrigin(0.5)
-    .setScrollFactor(0)
-    .setDepth(2000);
 
-    this.add.text(400, 310, `PUNTOS FINALES: ${this.score}`, {
-        fontSize: '26px',
-        fontFamily: 'Arial',
-        fill: '#ffffff',
-        backgroundColor: '#000000',
-        padding: {
-            x: 12,
-            y: 8
-        }
-    })
-    .setOrigin(0.5)
-    .setScrollFactor(0)
-    .setDepth(2000);
+        this.physics.pause();
 
-    this.time.delayedCall(3000, () => {
-        this.scene.start('MenuScene');
-    });
+        this.add.text(400, 230, 'GAME OVER', {
+            fontSize: '52px',
+            fontFamily: 'Arial',
+            fill: '#ff3333',
+            backgroundColor: '#000000',
+            padding: {
+                x: 18,
+                y: 10
+            }
+        })
+        .setOrigin(0.5)
+        .setScrollFactor(0)
+        .setDepth(2000);
+
+        this.add.text(400, 310, `PUNTOS FINALES: ${this.score}`, {
+            fontSize: '26px',
+            fontFamily: 'Arial',
+            fill: '#ffffff',
+            backgroundColor: '#000000',
+            padding: {
+                x: 12,
+                y: 8
+            }
+        })
+        .setOrigin(0.5)
+        .setScrollFactor(0)
+        .setDepth(2000);
+
+        this.time.delayedCall(3000, () => {
+            this.scene.start('MenuScene');
+        });
     }
 }
