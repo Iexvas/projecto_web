@@ -270,20 +270,23 @@ export class Level1 extends Phaser.Scene {
         graphics.destroy();
     }
 
+    // ------------Botón de mute para la música------------
     crearBotonMute() {
-        this.sound.mute = localStorage.getItem('isMuted') === 'true';
-
+         // Iniciar el juego con sonido
+        this.sound.mute = false;
+        // Crear el botón de mute en la esquina superior derecha
         this.btnMute = this.add.image(750, 50, 'mute_button')
             .setInteractive()
             .setScrollFactor(0)
             .setScale(0.05)
             .setDepth(100);
-
-        this.btnMute.setAlpha(this.sound.mute ? 0.5 : 1.0);
-
+        // Al inicio el boton es transparente para indicar que el sonido está activo
+        this.btnMute.setAlpha(0.5);
+        // Interracion con el boton
         this.btnMute.on('pointerdown', () => {
             this.sound.mute = !this.sound.mute;
             this.btnMute.setAlpha(this.sound.mute ? 0.5 : 1.0);
+            // Guardar la nueva preferencia en el navegador
             localStorage.setItem('isMuted', this.sound.mute);
         });
     }
