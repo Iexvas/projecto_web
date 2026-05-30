@@ -12,6 +12,11 @@ import eloyJump from '../assets/characters/eloy/eloy_jump.png';
 import eloyShoot from '../assets/characters/eloy/eloy_shoot.png';
 import eloyDeath from '../assets/characters/eloy/eloy_death.png';
 
+// Efectos de sonido mission complete, mission y game over
+import sfxInicio from '../assets/audio/mission.mp3';
+import sfxCompletado from '../assets/audio/mission_complete.mp3';
+import sfxGameOver from '../assets/audio/grito.mp3';
+
 export class BaseLevel extends Phaser.Scene {
     constructor(config) {
         super({ key: config.key });
@@ -54,6 +59,12 @@ export class BaseLevel extends Phaser.Scene {
         this.musicKey = this.levelKey.toLowerCase() + '_music'; 
         this.load.audio(this.musicKey, this.musicFile);
         
+        // Cargar efectos de sonido
+        this.load.audio('sfx_inicio', sfxInicio);
+        this.load.audio('sfx_completado', sfxCompletado);
+        this.load.audio('sfx_gameover', sfxGameOver);
+
+        // Cargar botones y enemigos
         this.load.image('mute_button', muteButton);
         this.load.image('enemy_machete', enemyMachete);
 
@@ -100,7 +111,16 @@ export class BaseLevel extends Phaser.Scene {
             volume: 0.35
         });
 
-        this.musicaNivel.play();
+        this.time.delayedCall(7000, () => {
+            this.musicaNivel.play();
+        });
+        // this.musicaNivel.play();
+
+        // Reproducir efectos de sonido
+        // Al iniciar el nivel
+        this.time.delayedCall(500, () => {
+            this.sound.play('sfx_inicio', { volume: 0.6 });
+        });
 
         this.platforms = this.physics.add.staticGroup();
 
@@ -161,9 +181,9 @@ export class BaseLevel extends Phaser.Scene {
     }
 
     crearTextoNivel() {
-        this.add.text(400, 90, this.levelTitle, {
-            fontSize: '34px',
-            fontFamily: 'Arial',
+        this.add.text(400, 115, this.levelTitle, {
+            fontSize: '30px',
+            fontFamily: 'Papyrus',
             fill: '#ffffff',
             backgroundColor: '#000000',
             padding: {
@@ -175,7 +195,7 @@ export class BaseLevel extends Phaser.Scene {
         .setScrollFactor(0)
         .setDepth(1000);
 
-        this.time.delayedCall(1800, () => {
+        this.time.delayedCall(8000, () => {
             this.children.list.forEach((child) => {
                 if (child.text === this.levelTitle) {
                     child.destroy();
@@ -228,6 +248,9 @@ export class BaseLevel extends Phaser.Scene {
         if (this.nivelCompletado) return;
 
         this.nivelCompletado = true;
+
+        // Reproducir efecto de sonido de misión completada
+        this.sound.play('sfx_completado', { volume: 0.7 });
 
         this.player.setVelocity(0, 0);
         this.player.body.enable = false;
@@ -393,6 +416,9 @@ export class BaseLevel extends Phaser.Scene {
 
     gameOver() {
     this.nivelCompletado = true;
+
+    // Reproducir efecto de sonido de game over
+    this.sound.play('sfx_gameover', { volume: 0.8 });
 
     this.physics.pause();
 
