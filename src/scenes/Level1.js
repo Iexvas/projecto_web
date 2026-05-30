@@ -58,6 +58,22 @@ export class Level1 extends Phaser.Scene {
         // REQUISITO OBLIGATORIO: Detección de colisiones 
         // Hacemos que el jugador colisione con el suelo
         this.physics.add.collider(this.player, this.platforms);
+
+        // Pausa del juego
+        this.input.keyboard.on('keydown-ESC', () => {
+            // Pausamos la escena actual
+            this.scene.pause();
+            
+            // Lanzamos la escena de pausa encima, enviándole el soldado actual
+            this.scene.launch('Pause', { soldadoElegido: this.soldadoElegido });
+        });
+
+        this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+            if (this.musicaNivel1) {
+                this.musicaNivel1.stop();
+                this.musicaNivel1.destroy();
+            }
+        });
     }
 
     update() {

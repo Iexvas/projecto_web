@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { MenuScene } from './scenes/MenuScene.js';
 import { Level1 } from './scenes/Level1.js';
+import { Pause } from './scenes/Pause.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -21,7 +22,7 @@ const config = {
             debug: true // Muestra los cuadros de colisión azules/verdes en desarrollo
         }
     },
-    scene: [MenuScene, Level1] // Cargamos la primera escena
+    scene: [MenuScene, Level1, Pause] // Cargamos la primera escena
 };
 
 const game = new Phaser.Game(config);
