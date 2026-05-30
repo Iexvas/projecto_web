@@ -8,6 +8,8 @@ export class Pause extends Phaser.Scene {
     init(data) {
         // Recibimos el soldado elegido para poder pasarlo de vuelta si se reinicia el nivel
         this.soldadoElegido = data.soldadoElegido || 0;
+        // Recibimos el nivel de origen para saber a qué nivel volver al reanudar o reiniciar
+        this.nivelOrigen = data.nivelOrigen || 'Level1'; 
     }
 
     create() {
@@ -96,12 +98,12 @@ export class Pause extends Phaser.Scene {
                 this.reanudarJuego();
                 break;
             case 1: // REINICIAR NIVEL
-                this.scene.stop('Level1');
-                this.scene.start('Level1', { soldadoElegido: this.soldadoElegido });
+                this.scene.stop(this.nivelOrigen);
+                this.scene.start(this.nivelOrigen, { soldadoElegido: this.soldadoElegido });
                 this.scene.stop(); // Detiene esta escena de pausa
                 break;
             case 2: // REGRESAR A SELECCIÓN
-                this.scene.stop('Level1');
+                this.scene.stop(this.nivelOrigen);
                 this.scene.start('MenuScene');
                 this.scene.stop();
                 break;
@@ -109,7 +111,8 @@ export class Pause extends Phaser.Scene {
     }
 
     reanudarJuego() {
-        this.scene.resume('Level1'); // Quita la pausa a Level1
-        this.scene.stop(); // Apaga el menú de pausa
+        //Quita la pausa al nivel de origen y cierra el menú de pausa
+        this.scene.resume(this.nivelOrigen); 
+        this.scene.stop(); 
     }
 }

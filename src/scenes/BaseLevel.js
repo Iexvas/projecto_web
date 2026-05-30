@@ -409,7 +409,9 @@ export class BaseLevel extends Phaser.Scene {
         this.input.keyboard.on('keydown-ESC', () => {
             this.scene.pause();
             this.scene.launch('Pause', {
-                soldadoElegido: this.soldadoElegido
+                soldadoElegido: this.soldadoElegido,
+                // agregar desde que menu se viene
+                nivelOrigen: this.levelKey 
             });
         });
     }
