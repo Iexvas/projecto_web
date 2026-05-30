@@ -40,7 +40,7 @@ export class MenuScene extends Phaser.Scene {
 
         // antes del bucle
         this.nombres = [];
-        const nombresLista = ['Gabriel ', 'Abdala', 'Eloy', 'Jaime'];
+        const nombresLista = ['Gabriel ', 'Abdalá', 'Eloy', 'Jaime'];
 
         for (let i = 0; i < 4; i++) {
             let soldado = this.add.image(posicionesX[i], posicionY,     `soldado${i}`)
