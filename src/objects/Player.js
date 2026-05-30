@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, characterKey = 'eloy') {
-        super(scene, x, y, `${characterKey}_idle`);
+        super(scene, x, y, `${characterKey}_idle_sheet`, 0);
 
         this.scene = scene;
         this.characterKey = characterKey;
