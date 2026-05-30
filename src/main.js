@@ -2,6 +2,10 @@ import Phaser from 'phaser';
 import { Intro } from './scenes/Intro.js';
 import { MenuScene } from './scenes/MenuScene.js';
 import { Level1 } from './scenes/Level1.js';
+import { LoadingScene } from './scenes/LoadingScene.js';
+import { Level2 } from './scenes/Level2.js';
+import { Level3 } from './scenes/Level3.js';
+
 import { Pause } from './scenes/Pause.js';
 
 const config = {
@@ -23,7 +27,7 @@ const config = {
             debug: true // Muestra los cuadros de colisión azules/verdes en desarrollo
         }
     },
-    scene: [Intro, MenuScene, Level1, Pause] // Cargamos la primera escena
+    scene: [MenuScene, Level1, LoadingScene, Level2, Level3, Pause] // Cargamos la primera escena
 };
 
 const game = new Phaser.Game(config);

@@ -20,17 +20,19 @@ export class Level1 extends Phaser.Scene {
     }
 
     init(data) {
-        this.soldadoElegido = data.soldadoElegido || 0;
+        this.soldadoElegido = data.soldadoElegido ?? 0;
 
         const personajes = ['gabriel', 'abdala', 'eloy', 'jaime'];
 
         this.characterKey = personajes[this.soldadoElegido] || 'eloy';
 
-        // De momento solo tenemos spritesheet real de Eloy.
-        // Si seleccionan otro personaje, usamos Eloy temporalmente.
         if (this.characterKey !== 'eloy') {
             this.characterKey = 'eloy';
         }
+
+        this.score = data.score ?? 0;
+        this.health = data.health ?? 3;
+        this.nivelCompletado = false;
 
         console.log('Iniciando misión con:', this.characterKey);
     }
@@ -93,7 +95,9 @@ export class Level1 extends Phaser.Scene {
 
         this.player = new Player(this, 140, 430, this.characterKey);
         this.physics.add.collider(this.player, this.platforms);
-        this.score = 0;
+        
+        this.player.health = this.health;
+        this.player.maxHealth = 3;
         this.crearHUD();
 
         this.enemies = this.physics.add.group();
@@ -139,9 +143,15 @@ export class Level1 extends Phaser.Scene {
             null,
             this
         );
+
+        this.crearMetaNivel();
     }
 
     update() {
+
+        if (this.nivelCompletado) return;
+
+
         if (this.player) {
             this.player.update();
             this.actualizarHUD();
@@ -167,6 +177,8 @@ export class Level1 extends Phaser.Scene {
                 }
             });
         }
+
+        
     }
 
     crearHUD() {
@@ -298,5 +310,90 @@ export class Level1 extends Phaser.Scene {
                 soldadoElegido: this.soldadoElegido
             });
         });
+    }
+
+    crearMetaNivel() {
+    this.metaNivel = this.add.rectangle(2300, 420, 80, 260, 0x00ff00, 0.25);
+    this.physics.add.existing(this.metaNivel, true);
+
+    this.physics.add.overlap(
+        this.player,
+        this.metaNivel,
+        this.completarNivel,
+        null,
+        this
+    );
+}
+
+    completarNivel() {
+        if (this.nivelCompletado) return;
+
+        this.nivelCompletado = true;
+
+        this.player.setVelocity(0, 0);
+        this.player.body.enable = false;
+
+        this.add.text(400, 250, 'MISIÓN COMPLETADA', {
+            fontSize: '42px',
+            fontFamily: 'Arial',
+            fill: '#ffffff',
+            backgroundColor: '#000000',
+            padding: {
+                x: 16,
+                y: 10
+            }
+        })
+        .setOrigin(0.5)
+        .setScrollFactor(0)
+        .setDepth(1000);
+
+        this.time.delayedCall(2500, () => {
+            this.scene.start('LoadingScene', {
+                nextScene: 'Level2',
+                soldadoElegido: this.soldadoElegido,
+                score: this.score,
+                health: this.player.health,
+                message: 'MISIÓN 1 COMPLETADA'
+            });
+        });
+    }
+
+
+    gameOver() {
+    this.nivelCompletado = true;
+
+    this.physics.pause();
+
+    this.add.text(400, 230, 'GAME OVER', {
+        fontSize: '52px',
+        fontFamily: 'Arial',
+        fill: '#ff3333',
+        backgroundColor: '#000000',
+        padding: {
+            x: 18,
+            y: 10
+        }
+    })
+    .setOrigin(0.5)
+    .setScrollFactor(0)
+    .setDepth(2000);
+
+    this.add.text(400, 310, `PUNTOS FINALES: ${this.score}`, {
+        fontSize: '26px',
+        fontFamily: 'Arial',
+        fill: '#ffffff',
+        backgroundColor: '#000000',
+        padding: {
+            x: 12,
+            y: 8
+        }
+    })
+    .setOrigin(0.5)
+    .setScrollFactor(0)
+    .setDepth(2000);
+
+    this.time.delayedCall(3000, () => {
+        this.scene.start('MenuScene');
+    });
     }
 }
