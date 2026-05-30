@@ -36,8 +36,12 @@ export class Level1 extends Phaser.Scene {
 
     create() {
 
+        this.physics.world.setBounds(0, 0, 2400, 600);
+
         // Renderizar el fondo de la selva
-        this.background = this.add.image(800, 360, 'fondo_selva');
+        this.background = this.add.image(0, 0, 'fondo_selva')
+        .setOrigin(0, 0)
+        .setDisplaySize(2400,600);
 
         // ----------Reproducir música de fondo para el nivel----------------
         this.musicaNivel1 = this.sound.add('nivel1_music', {
