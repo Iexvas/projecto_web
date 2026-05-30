@@ -13,6 +13,12 @@ export class MenuScene extends Phaser.Scene {
         this.load.image('soldado1', '/src/assets/menu/abdala.png');
         this.load.image('soldado2', '/src/assets/menu/eloy.png');
         this.load.image('soldado3', '/src/assets/menu/jaime.png');
+
+        // sonido de la escena
+        this.load.audio('menu_music', '/src/assets/audio/menu.mp3');
+
+        // sonido de selección
+        this.load.audio('select_sound', '/src/assets/audio/seleccion.mp3');
     }
 
     create() {
@@ -72,6 +78,20 @@ export class MenuScene extends Phaser.Scene {
 
         this.actualizarSeleccion();
 
+        // Reproducir música de fondo
+        this.musicaMenu = this.sound.add('menu_music', {
+            loop: true,   // reproducir infinitamente
+            volume: 0.5   // Volumen inicial 
+        });
+
+        // Iniciar la reproducción
+        this.musicaMenu.play();
+
+        // efecto de sonido
+        this.sonidoSeleccion = this.sound.add('select_sound', {
+            volume: 0.8
+        });
+
         this.teclas = this.input.keyboard.addKeys({
             izq: Phaser.Input.Keyboard.KeyCodes.LEFT,
             der: Phaser.Input.Keyboard.KeyCodes.RIGHT,
@@ -80,6 +100,7 @@ export class MenuScene extends Phaser.Scene {
             enter: Phaser.Input.Keyboard.KeyCodes.ENTER,
             espacio: Phaser.Input.Keyboard.KeyCodes.SPACE
         });
+        
     }
 
     update() {
@@ -124,8 +145,18 @@ export class MenuScene extends Phaser.Scene {
     }
 
     iniciarJuego() {
-        // Al presionar Enter, pasamos a Level1 y le enviamos qué soldado elegimos
-        // Para que Level1 sepa qué sprite de jugador cargar.
-        this.scene.start('Level1', { soldadoElegido: this.seleccionActual });
+
+        // detener la musica de fondo al iniciar el juego
+        if (this.musicaMenu) {
+            this.musicaMenu.stop();
+        }
+
+        // reproducir el sonido de selección
+        this.sonidoSeleccion.play();
+
+        // Esperar un momento para que se escuche el sonido antes de cambiar de escena
+        this.time.delayedCall(2000, () => {
+            this.scene.start('Level1', { soldadoElegido: this.seleccionActual });
+        });
     }
 }

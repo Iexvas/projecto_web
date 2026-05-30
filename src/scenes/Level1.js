@@ -31,7 +31,7 @@ export class Level1 extends Phaser.Scene {
     create() {
 
         // Renderizar el fondo de la selva
-        this.background = this.add.image(100, 220, 'fondo_selva');
+        this.background = this.add.image(800, 360, 'fondo_selva');
 
         // Instanciamos a nuestro jugador en el centro superior de la pantalla
         this.player = new Player(this, 100, 400);
