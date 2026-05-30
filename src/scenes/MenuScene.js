@@ -38,11 +38,30 @@ export class MenuScene extends Phaser.Scene {
         // Posiciones de los 4 personajes dentro del panel
         const posicionesX = [96, 300, 500, 700];
 
+        // antes del bucle
+        this.nombres = [];
+        const nombresLista = ['Gabriel ', 'Abdala', 'Eloy', 'Jaime'];
+
         for (let i = 0; i < 4; i++) {
             let soldado = this.add.image(posicionesX[i], posicionY,     `soldado${i}`)
                 .setOrigin(0.5).setScale(0.178);
 
+            // calcular posición del label justo debajo del sprite
+             const labelOffset = 10; // ajusta si quieres más/menos separación
+             const labelY = posicionY + (soldado.displayHeight / 2) + labelOffset;
+
+             // crear texto centrado bajo el sprite
+             let label = this.add.text(posicionesX[i], labelY, nombresLista[i], {
+                fontSize: '23px',
+                fontFamily: 'Papyrus',
+                fill: '#C9D1D9',
+                fontStyle: 'bold'
+             })
+             .setOrigin(0.5, 0.13)
+             .setDepth(8);
+
             this.opciones.push(soldado);
+            this.nombres.push(label);
         }
 
         this.indicadorP1 = this.add.text(1, posicionY - 140, 'P1 ▼', {

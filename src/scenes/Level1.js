@@ -6,9 +6,18 @@ export class Level1 extends Phaser.Scene {
         super({ key: 'Level1' });
     }
 
+    // El método init se ejecuta antes de preload y sirve para recibir datos de otras escenas
+    init(data) {
+        // Aquí capturamos el índice del soldado seleccionado (0, 1, 2 o 3)
+        this.soldadoElegido = data.soldadoElegido || 0; 
+        console.log("Iniciando misión con el comando tipo:", this.soldadoElegido);
+    }
+
     preload() {
-        // TRUCO DE PROTOTIPADO: Creamos un rectángulo verde texturizado de 32x48 píxeles
-        // Así no necesitas descargar ninguna imagen para probar el código hoy mismo.
+        // Cargar el fondo desde la carpeta
+        this.load.image('fondo_selva', '/src/assets/levels/selva.png');
+
+        // Marcador de posicion temporal para el jugador
         const canvas = document.createElement('canvas');
         canvas.width = 32;
         canvas.height = 48;
@@ -20,14 +29,19 @@ export class Level1 extends Phaser.Scene {
     }
 
     create() {
+
+        // Renderizar el fondo de la selva
+        this.background = this.add.image(100, 220, 'fondo_selva');
+
         // Instanciamos a nuestro jugador en el centro superior de la pantalla
-        this.player = new Player(this, 400, 100);
+        this.player = new Player(this, 100, 400);
 
         // Creamos un suelo rápido con físicas estáticas para que no se caiga al vacío
         this.platforms = this.physics.add.staticGroup();
         
         // Creamos una plataforma invisible o visible en la base (X: 400, Y: 550, Ancho: 800, Alto: 40)
         let ground = this.add.rectangle(400, 550, 800, 40, 0x34495e);
+        ground.setAlpha(0.6); // Opcional: hazlo semitransparente para ver el fondo debajo
         this.platforms.add(ground);
 
         // REQUISITO OBLIGATORIO: Detección de colisiones 
