@@ -24,6 +24,18 @@ export class MenuScene extends Phaser.Scene {
     create() {
         this.cameras.main.setBackgroundColor('#000000');
 
+        // Obtener el nombre del jugador guardado
+        const playerName = this.registry.get('playerName') || 'JUGADOR';
+
+        // Mostrar nombre del jugador
+        this.add.text(400, 30, `Jugador: ${playerName}`, {
+            fontSize: '18px',
+            fontFamily: 'Papyrus',
+            fill: '#ffaa00',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
+
         this.add.text(390, 105, 'ELIGE A TÚ REPRESENTANTE', {
             fontSize: '23px',
             fontFamily: 'Papyrus',
@@ -66,7 +78,7 @@ export class MenuScene extends Phaser.Scene {
             });
 
             // calcular posición del label justo debajo del sprite
-             const labelOffset = 10; // ajusta si quieres más/menos separación
+             const labelOffset = 10; 
              const labelY = posicionY + (soldado.displayHeight / 2) + labelOffset;
 
              // crear texto centrado bajo el sprite

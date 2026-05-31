@@ -1,5 +1,8 @@
 import Phaser from 'phaser';
 import { Intro } from './scenes/Intro.js';
+import { MainMenuScene } from './scenes/MainMenuScene.js';
+import { PlayerNameScene } from './scenes/PlayerNameScene.js';
+import { ScoresScene } from './scenes/ScoresScene.js';
 import { MenuScene } from './scenes/MenuScene.js';
 import { Level1 } from './scenes/Level1.js';
 import { LoadingScene } from './scenes/LoadingScene.js';
@@ -10,8 +13,6 @@ import { Pause } from './scenes/Pause.js';
 
 const config = {
     type: Phaser.AUTO,
-    //width: 800, 
-    //height: 600,
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -23,11 +24,11 @@ const config = {
     physics: {
         default: 'arcade', 
         arcade: {
-            gravity: { y: 600 }, // Gravedad básica para nuestro plataformero
-            debug: false // Muestra los cuadros de colisión azules/verdes en desarrollo
+            gravity: { y: 600 },
+            debug: false // Muestra los cuadros de colisión en desarrollo
         }
     },
-    scene: [Intro, MenuScene, Level1, LoadingScene, Level2, Level3, Pause] 
+    scene: [Intro, MainMenuScene, PlayerNameScene, ScoresScene, MenuScene, Level1, LoadingScene, Level2, Level3, Pause] 
 };
 
 const game = new Phaser.Game(config);

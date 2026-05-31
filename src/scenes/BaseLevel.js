@@ -194,12 +194,6 @@ export class BaseLevel extends Phaser.Scene {
             this.musicaNivel.play();
         });
 
-        // Reproducir efectos de sonido
-        // Al iniciar el nivel
-        // this.time.delayedCall(500, () => {
-        //     this.sound.play('sfx_inicio', { volume: 0.6 });
-        // });
-
         this.platforms = this.physics.add.staticGroup();
          
         // Plataformas adicionales
@@ -612,8 +606,23 @@ export class BaseLevel extends Phaser.Scene {
         .setDepth(2000);
 
         this.time.delayedCall(3000, () => {
+            // Guardar el puntaje final antes de volver al menú
+            this.guardarPuntajeFinal();
             this.scene.start('MenuScene');
         });
+    }
+
+    guardarPuntajeFinal() {
+        let scores = this.registry.get('highScores') || [];
+        let playerName = this.registry.get('playerName') || 'Desconocido';
+        
+        // Agregar el puntaje actual
+        scores.push({ name: playerName, score: this.score });
+        
+        // Ordenar de mayor a menor
+        scores.sort((a, b) => b.score - a.score);
+        
+        this.registry.set('highScores', scores);
     }
 
         crearControlesTactiles() {
