@@ -1,6 +1,9 @@
 import { BaseLevel } from './BaseLevel.js';
 import fondoSelva from '../assets/levels/selva.png';
 import nivel1Music from '../assets/audio/theme_level1.mp3';
+// Importar las texturas y el portal
+import groundLevel1 from '../assets/tiles/ground_level1.jpg';
+import portalLevel1 from '../assets/tiles/portal_level1.png';
 
 export class Level1 extends BaseLevel {
     constructor() {
@@ -8,6 +11,10 @@ export class Level1 extends BaseLevel {
             key: 'Level1',
             backgroundKey: 'fondo_selva',
             backgroundImage: fondoSelva,
+            groundKey: 'ground_level1',
+            groundImage: groundLevel1,
+            portalKey: 'portal_level1',
+            portalImage: portalLevel1,
             musicFile: nivel1Music,  
             nextScene: 'Level2',
             levelTitle: 'NIVEL 1 - ATERRIZAJE EN LA SELVA',

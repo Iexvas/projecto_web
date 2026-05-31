@@ -24,7 +24,7 @@ const config = {
         default: 'arcade', 
         arcade: {
             gravity: { y: 600 }, // Gravedad básica para nuestro plataformero
-            debug: true // Muestra los cuadros de colisión azules/verdes en desarrollo
+            debug: false // Muestra los cuadros de colisión azules/verdes en desarrollo
         }
     },
     scene: [Intro, MenuScene, Level1, LoadingScene, Level2, Level3, Pause] 
