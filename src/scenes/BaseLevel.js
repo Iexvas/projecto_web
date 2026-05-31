@@ -135,31 +135,6 @@ export class BaseLevel extends Phaser.Scene {
             shoot: jaimeShoot,
             death: jaimeDeath
         });
-
-        // this.load.spritesheet('eloy_idle_sheet', eloyIdle, {
-        //     frameWidth: 512,
-        //     frameHeight: 512
-        // });
-
-        // this.load.spritesheet('eloy_run_sheet', eloyRun, {
-        //     frameWidth: 512,
-        //     frameHeight: 512
-        // });
-
-        // this.load.spritesheet('eloy_jump_sheet', eloyJump, {
-        //     frameWidth: 512,
-        //     frameHeight: 512
-        // });
-
-        // this.load.spritesheet('eloy_shoot_sheet', eloyShoot, {
-        //     frameWidth: 512,
-        //     frameHeight: 512
-        // });
-
-        // this.load.spritesheet('eloy_death_sheet', eloyDeath, {
-        //     frameWidth: 512,
-        //     frameHeight: 512
-        // });
     }
 
     create() {
@@ -493,11 +468,6 @@ export class BaseLevel extends Phaser.Scene {
             this.crearAnimacionSiNoExiste(`${personaje}_shoot`, `${personaje}_shoot_sheet`, 0, 3, 14, 0);
             this.crearAnimacionSiNoExiste(`${personaje}_death`, `${personaje}_death_sheet`, 0, 3, 6, 0);
         });
-        // this.crearAnimacionSiNoExiste('eloy_idle', 'eloy_idle_sheet', 0, 3, 5, -1);
-        // this.crearAnimacionSiNoExiste('eloy_run', 'eloy_run_sheet', 0, 5, 10, -1);
-        // this.crearAnimacionSiNoExiste('eloy_jump', 'eloy_jump_sheet', 0, 2, 8, 0);
-        // this.crearAnimacionSiNoExiste('eloy_shoot', 'eloy_shoot_sheet', 0, 3, 14, 0);
-        // this.crearAnimacionSiNoExiste('eloy_death', 'eloy_death_sheet', 0, 3, 6, 0);
     }
 
     crearAnimacionSiNoExiste(key, texture, start, end, frameRate, repeat) {
