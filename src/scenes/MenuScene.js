@@ -50,7 +50,20 @@ export class MenuScene extends Phaser.Scene {
 
         for (let i = 0; i < 4; i++) {
             let soldado = this.add.image(posicionesX[i], posicionY,     `soldado${i}`)
-                .setOrigin(0.5).setScale(0.178);
+                .setOrigin(0.5).setScale(0.178)
+                .setInteractive();
+
+            // Lógica táctil para los personajes
+            soldado.on('pointerdown', () => {
+                if (this.seleccionActual === i) {
+                    // Si toca el personaje que ya  está seleccionado, inicia el juego
+                    this.iniciarJuego();
+                } else {
+                    // Si toca uno diferente, mueve el selector hacia él
+                    this.seleccionActual = i;
+                    this.actualizarSeleccion();
+                }
+            });
 
             // calcular posición del label justo debajo del sprite
              const labelOffset = 10; // ajusta si quieres más/menos separación

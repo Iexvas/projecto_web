@@ -203,6 +203,8 @@ export class BaseLevel extends Phaser.Scene {
         this.cameras.main.setDeadzone(180, 80);
 
         this.crearBotonMute();
+        //Crear botones tactiles
+        this.crearControlesTactiles();
         this.configurarPausa();
 
         this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
@@ -567,6 +569,67 @@ export class BaseLevel extends Phaser.Scene {
 
         this.time.delayedCall(3000, () => {
             this.scene.start('MenuScene');
+        });
+    }
+
+        crearControlesTactiles() {
+        // Detecta si es un dispositivo móvil (pantalla táctil)
+        if (!this.sys.game.device.input.touch) return; 
+
+        // Permitir múltiples toques a la vez 
+        this.input.addPointer(2);
+
+        // Estilo visual, círculos semi-transparentes blancos
+        const btnStyle = { color: 0xffffff, alpha: 0.3 };
+
+        // Botón IZQUIERDA
+        const btnLeft = this.add.circle(60, 520, 45, btnStyle.color, btnStyle.alpha)
+            .setInteractive()
+            .setScrollFactor(0)
+            .setDepth(9999);
+
+        // Botón DERECHA
+        const btnRight = this.add.circle(180, 520, 45, btnStyle.color, btnStyle.alpha)
+            .setInteractive()
+            .setScrollFactor(0)
+            .setDepth(9999);
+
+        // Botón SALTAR (esquina inferior derecha)
+        const btnJump = this.add.circle(740, 520, 45, btnStyle.color, btnStyle.alpha)
+            .setInteractive()
+            .setScrollFactor(0)
+            .setDepth(9999);
+
+        // Botón DISPARAR
+        const btnShoot = this.add.circle(620, 520, 45, btnStyle.color, btnStyle.alpha)
+            .setInteractive()
+            .setScrollFactor(0)
+            .setDepth(9999);
+
+        // --- Lógica del tacto: Simulando las teclas virtuales de Phaser ---
+
+        // Vínculo Izquierda
+        btnLeft.on('pointerdown', () => this.player.keys.left.isDown = true);
+        btnLeft.on('pointerup', () => this.player.keys.left.isDown = false);
+        btnLeft.on('pointerout', () => this.player.keys.left.isDown = false);
+
+        // Vínculo Derecha
+        btnRight.on('pointerdown', () => this.player.keys.right.isDown = true);
+        btnRight.on('pointerup', () => this.player.keys.right.isDown = false);
+        btnRight.on('pointerout', () => this.player.keys.right.isDown = false);
+
+        // Vínculo Salto
+        btnJump.on('pointerdown', () => {
+            if (this.player.body.blocked.down) {
+                // Modificar la velocidad Y para asegurar el salto instantáneo
+                this.player.setVelocityY(this.player.jumpForce);
+                this.player.playAnim('jump');
+            }
+        });
+
+        // Vínculo Disparo
+        btnShoot.on('pointerdown', () => {
+            this.player.shoot();
         });
     }
 }
