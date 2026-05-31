@@ -11,16 +11,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
 
         // Tamaño visual del sprite
-        this.setScale(0.35);
+        this.setScale(0.30);
         this.setDepth(10);
 
         // Física
         this.setCollideWorldBounds(true);
         this.setBounce(0.02);
 
-        // Caja de colisión. Ajustable si se ve raro.
-        this.body.setSize(170, 330);
-        this.body.setOffset(170, 145);
+        // Caja de colisión
+        this.body.setSize(145, 285);
+        this.body.setOffset(185, 175);
 
         // Movimiento
         this.speed = 220;
@@ -117,8 +117,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.isShooting = true;
         this.playAnim('shoot', true);
 
-        const bulletX = this.x + (this.facing === 1 ? 95 : -95);
-        const bulletY = this.y - 45;
+        const bulletX = this.x + (this.facing === 1 ? 65 : -65);
+        const bulletY = this.y - 15;
 
         const bullet = this.bullets.get();
 

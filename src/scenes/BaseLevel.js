@@ -2,16 +2,23 @@ import Phaser from 'phaser';
 import { Player } from '../objects/Player.js';
 import { Enemy } from '../objects/Enemy.js';
 
-// Botón de mute y enemigo machete
+// Botón de mute 
 import muteButton from '../assets/ui/mute.png';
+
+// Enemigos
 import enemyMachete from '../assets/enemies/enemy_machete.png';
+import enemyMacheteIdle from '../assets/enemies/enemy_machete_idle.png';
+import enemyMacheteRun from '../assets/enemies/enemy_machete_run.png';
+import enemyMacheteJump from '../assets/enemies/enemy_machete_jump.png';
+import enemyMacheteAttack from '../assets/enemies/enemy_machete_attack.png';
+import enemyMacheteHurt from '../assets/enemies/enemy_machete_hurt.png';
+import enemyMacheteDeath from '../assets/enemies/enemy_machete_death.png';
 
 // Añadir vida y score
 import heartIcon from '../assets/tiles/heart.png';
 import scoreIcon from '../assets/tiles/score.png';
 
 // Efectos de sonido mission complete, mission y game over
-// import sfxInicio from '../assets/audio/mission.mp3';
 import sfxCompletado from '../assets/audio/mission_complete.mp3';
 import sfxGameOver from '../assets/audio/grito.mp3';
 
@@ -76,7 +83,6 @@ export class BaseLevel extends Phaser.Scene {
         this.health = data.health ?? 3;
         this.nivelCompletado = false;
         
-        // this.soldadoElegido = data.soldadoElegido ?? 2;
         this.message = data.message || 'CARGANDO MISIÓN...';       
     }
 
@@ -92,13 +98,43 @@ export class BaseLevel extends Phaser.Scene {
         this.load.audio(this.musicKey, this.musicFile);
         
         // Cargar efectos de sonido
-        // this.load.audio('sfx_inicio', sfxInicio);
         this.load.audio('sfx_completado', sfxCompletado);
         this.load.audio('sfx_gameover', sfxGameOver);
 
-        // Cargar botones y enemigos
+        // Cargar boton
         this.load.image('mute_button', muteButton);
+        // Cargar enemigos
         this.load.image('enemy_machete', enemyMachete);
+
+        this.load.spritesheet('enemy_machete_idle_sheet', enemyMacheteIdle, {
+            frameWidth: 512,
+            frameHeight: 512
+        });
+
+        this.load.spritesheet('enemy_machete_run_sheet', enemyMacheteRun, {
+            frameWidth: 512,
+            frameHeight: 512
+        });
+
+        this.load.spritesheet('enemy_machete_jump_sheet', enemyMacheteJump, {
+            frameWidth: 512,
+            frameHeight: 512
+        });
+
+        this.load.spritesheet('enemy_machete_attack_sheet', enemyMacheteAttack, {
+            frameWidth: 512,
+            frameHeight: 512
+        });
+
+        this.load.spritesheet('enemy_machete_hurt_sheet', enemyMacheteHurt, {
+            frameWidth: 512,
+            frameHeight: 512
+        });
+
+        this.load.spritesheet('enemy_machete_death_sheet', enemyMacheteDeath, {
+            frameWidth: 512,
+            frameHeight: 512
+        });
 
         // Cargar iconos de vida y score
         this.load.image('heart_icon', heartIcon);
@@ -372,15 +408,15 @@ export class BaseLevel extends Phaser.Scene {
     enemigoTocaJugador(player, enemy) {
         if (!player || !enemy || enemy.isDead) return;
 
-        player.takeDamage(1);
+        // player.takeDamage(1);
 
         if (player.x < enemy.x) {
-            player.setVelocityX(-220);
+            player.setVelocityX(-120);
         } else {
-            player.setVelocityX(220);
+            player.setVelocityX(120);
         }
 
-        player.setVelocityY(-180);
+        // player.setVelocityY(-180);
 
         this.actualizarHUD();
     }
@@ -470,6 +506,14 @@ export class BaseLevel extends Phaser.Scene {
             this.crearAnimacionSiNoExiste(`${personaje}_shoot`, `${personaje}_shoot_sheet`, 0, 3, 14, 0);
             this.crearAnimacionSiNoExiste(`${personaje}_death`, `${personaje}_death_sheet`, 0, 3, 6, 0);
         });
+
+        // Animaciones de enemigo machete
+        this.crearAnimacionSiNoExiste('enemy_machete_idle', 'enemy_machete_idle_sheet', 0, 3, 5, -1);
+        this.crearAnimacionSiNoExiste('enemy_machete_run', 'enemy_machete_run_sheet', 0, 5, 10, -1);
+        this.crearAnimacionSiNoExiste('enemy_machete_jump', 'enemy_machete_jump_sheet', 0, 3, 8, 0);
+        this.crearAnimacionSiNoExiste('enemy_machete_attack', 'enemy_machete_attack_sheet', 0, 5, 12, 0);
+        this.crearAnimacionSiNoExiste('enemy_machete_hurt', 'enemy_machete_hurt_sheet', 0, 1, 10, 0);
+        this.crearAnimacionSiNoExiste('enemy_machete_death', 'enemy_machete_death_sheet', 0, 4, 8, 0);
     }
 
     crearAnimacionSiNoExiste(key, texture, start, end, frameRate, repeat) {
