@@ -216,6 +216,9 @@ export class BaseLevel extends Phaser.Scene {
         this.player = new Player(this, 180, 400, this.characterKey);
         this.physics.add.collider(this.player, this.platforms);
 
+        // Pasar la vida que tenia el jugador al siguiente nivel
+        this.player.health = this.health;
+
         this.crearHUD();
         this.crearEnemigos();
         this.crearMetaNivel();
