@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 
 export class Enemy extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
-        super(scene, x, y, 'enemy_machete');
+        super(scene, x, y, 'enemy_machete_idle_sheet', 0);
 
         this.scene = scene;
 
@@ -24,6 +24,7 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
 
         this.canAttack = true;
         this.canJump = true;
+        this.isLockedAnim = false;
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -39,6 +40,8 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
 
         this.setVelocityX(this.speed * this.direction);
         this.setFlipX(true);
+
+        this.playEnemyAnim('idle');
     }
 
     update() {
@@ -73,9 +76,28 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.patrol();
     }
 
+    playEnemyAnim(animName, ignoreIfPlaying = true, lockDuration = 0) {
+        if (this.isLockedAnim && animName !== 'death') return;
+
+        const key = `enemy_machete_${animName}`;
+
+        if (this.scene.anims.exists(key)) {
+            this.anims.play(key, ignoreIfPlaying);
+        }
+
+        if (lockDuration > 0) {
+            this.isLockedAnim = true;
+
+            this.scene.time.delayedCall(lockDuration, () => {
+                this.isLockedAnim = false;
+            });
+        }
+    }
+
     patrol() {
         this.state = 'patrol';
 
+        this.playEnemyAnim('run');
         this.setVelocityX(this.speed * this.direction);
 
         if (this.direction === -1) {
@@ -84,7 +106,6 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
             this.setFlipX(false);
         }
 
-        // Patrulla cerca de su punto inicial, no cruza todo el mapa
         if (this.x < this.spawnX - 160) {
             this.direction = 1;
         }
@@ -100,9 +121,9 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.direction = directionToPlayer;
         this.setFlipX(directionToPlayer === -1);
 
+        this.playEnemyAnim('run');
         this.setVelocityX(this.chaseSpeed * directionToPlayer);
 
-        // Si el jugador está más arriba o hay distancia, intenta saltar
         const playerIsAbove = player.y < this.y - 45;
         const shouldJumpForward = distanceX > 130 && distanceX < 360;
 
@@ -117,6 +138,8 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     jumpTowardPlayer(directionToPlayer) {
         this.canJump = false;
+
+        this.playEnemyAnim('jump', true, 350);
 
         this.setVelocityY(this.jumpForce);
         this.setVelocityX(this.chaseSpeed * 1.25 * directionToPlayer);
@@ -136,7 +159,9 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
 
         this.canAttack = false;
 
-        // Pequeña anticipación para que no sea daño instantáneo injusto
+        this.playEnemyAnim('attack', true, 550);
+
+        // Aviso visual suave, solo el sprite se tiñe.
         this.setTint(0xffcc66);
 
         this.scene.time.delayedCall(180, () => {
@@ -173,6 +198,8 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
 
         this.direction = directionToSpawn;
         this.setFlipX(directionToSpawn === -1);
+
+        this.playEnemyAnim('run');
         this.setVelocityX(this.speed * directionToSpawn);
 
         if (Math.abs(this.x - this.spawnX) < 30) {
@@ -182,6 +209,8 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     takeDamage() {
         if (this.isDead) return false;
+
+        this.playEnemyAnim('hurt', true, 250);
 
         this.health--;
 
@@ -194,8 +223,16 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
 
     die() {
+        if (this.isDead) return;
+
         this.isDead = true;
         this.setVelocity(0, 0);
-        this.disableBody(true, true);
+        this.clearTint();
+
+        this.playEnemyAnim('death', true);
+
+        this.scene.time.delayedCall(550, () => {
+            this.disableBody(true, true);
+        });
     }
 }

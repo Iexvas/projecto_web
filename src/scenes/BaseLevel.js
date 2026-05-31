@@ -5,6 +5,12 @@ import { Enemy } from '../objects/Enemy.js';
 // Botón de mute y enemigo machete
 import muteButton from '../assets/ui/mute.png';
 import enemyMachete from '../assets/enemies/enemy_machete.png';
+import enemyMacheteIdle from '../assets/enemies/enemy_machete_idle.png';
+import enemyMacheteRun from '../assets/enemies/enemy_machete_run.png';
+import enemyMacheteJump from '../assets/enemies/enemy_machete_jump.png';
+import enemyMacheteAttack from '../assets/enemies/enemy_machete_attack.png';
+import enemyMacheteHurt from '../assets/enemies/enemy_machete_hurt.png';
+import enemyMacheteDeath from '../assets/enemies/enemy_machete_death.png';
 
 // Añadir vida y score
 import heartIcon from '../assets/tiles/heart.png';
@@ -100,6 +106,35 @@ export class BaseLevel extends Phaser.Scene {
         this.load.image('mute_button', muteButton);
         this.load.image('enemy_machete', enemyMachete);
 
+        this.load.spritesheet('enemy_machete_idle_sheet', enemyMacheteIdle, {
+            frameWidth: 512,
+            frameHeight: 512
+        });
+
+        this.load.spritesheet('enemy_machete_run_sheet', enemyMacheteRun, {
+            frameWidth: 512,
+            frameHeight: 512
+        });
+
+        this.load.spritesheet('enemy_machete_jump_sheet', enemyMacheteJump, {
+            frameWidth: 512,
+            frameHeight: 512
+        });
+
+        this.load.spritesheet('enemy_machete_attack_sheet', enemyMacheteAttack, {
+            frameWidth: 512,
+            frameHeight: 512
+        });
+
+        this.load.spritesheet('enemy_machete_hurt_sheet', enemyMacheteHurt, {
+            frameWidth: 512,
+            frameHeight: 512
+        });
+
+        this.load.spritesheet('enemy_machete_death_sheet', enemyMacheteDeath, {
+            frameWidth: 512,
+            frameHeight: 512
+        });
         // Cargar iconos de vida y score
         this.load.image('heart_icon', heartIcon);
         this.load.image('score_icon', scoreIcon);
@@ -496,6 +531,14 @@ export class BaseLevel extends Phaser.Scene {
         // this.crearAnimacionSiNoExiste('eloy_jump', 'eloy_jump_sheet', 0, 2, 8, 0);
         // this.crearAnimacionSiNoExiste('eloy_shoot', 'eloy_shoot_sheet', 0, 3, 14, 0);
         // this.crearAnimacionSiNoExiste('eloy_death', 'eloy_death_sheet', 0, 3, 6, 0);
+
+        this.crearAnimacionSiNoExiste('enemy_machete_idle', 'enemy_machete_idle_sheet', 0, 3, 5, -1);
+        this.crearAnimacionSiNoExiste('enemy_machete_run', 'enemy_machete_run_sheet', 0, 5, 10, -1);
+        this.crearAnimacionSiNoExiste('enemy_machete_jump', 'enemy_machete_jump_sheet', 0, 3, 8, 0);
+        this.crearAnimacionSiNoExiste('enemy_machete_attack', 'enemy_machete_attack_sheet', 0, 5, 12, 0);
+        this.crearAnimacionSiNoExiste('enemy_machete_hurt', 'enemy_machete_hurt_sheet', 0, 1, 10, 0);
+        this.crearAnimacionSiNoExiste('enemy_machete_death', 'enemy_machete_death_sheet', 0, 4, 8, 0);
+
     }
 
     crearAnimacionSiNoExiste(key, texture, start, end, frameRate, repeat) {
