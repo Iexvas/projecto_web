@@ -140,10 +140,6 @@ export class BaseLevel extends Phaser.Scene {
         });
 
         this.platforms = this.physics.add.staticGroup();
-
-        // const ground = this.add.rectangle(1200, 555, 2400, 40, 0x34495e);
-        // ground.setAlpha(0);
-        // this.platforms.add(ground);
          
         // Plataformas adicionales
         const tileWidth = 150;
@@ -372,7 +368,8 @@ export class BaseLevel extends Phaser.Scene {
         this.hudVida = this.add.text(55, 20, `${this.health}/3`, {
             fontSize: '20px',
             fontFamily: 'Papyrus',
-            fill: '#000000'
+            fill: '#fefefe',
+            backgroundColor: '#010000',
         })
         .setScrollFactor(0)
         .setDepth(999);
@@ -389,7 +386,8 @@ export class BaseLevel extends Phaser.Scene {
         this.hudPuntos = this.add.text(70, 60, `${this.score}`, {
             fontSize: '20px',
             fontFamily: 'Papyrus',
-            fill: '#000000'
+            fill: '#fcfcfc',
+            backgroundColor: '#020000'
         })
         .setScrollFactor(0)
         .setDepth(999);
