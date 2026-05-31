@@ -9,18 +9,18 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.spawnX = x;
         this.spawnY = y;
 
-        this.health = 1;
-        this.speed = 55;
-        this.chaseSpeed = 105;
-        this.jumpForce = -430;
+        this.health = 2;
+        this.speed = 60;
+        this.chaseSpeed = 115;
+        this.jumpForce = -450;
 
         this.isDead = false;
         this.direction = -1;
 
         this.state = 'patrol';
-        this.detectionRange = 420;
-        this.attackRange = 85;
-        this.maxChaseDistance = 650;
+        this.detectionRange = 520;
+        this.attackRange = 95;
+        this.maxChaseDistance = 750;
 
         this.canAttack = true;
         this.canJump = true;

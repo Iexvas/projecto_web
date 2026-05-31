@@ -22,9 +22,11 @@ export class Level1 extends BaseLevel {
             loadingMessage: 'MISIÓN 1 COMPLETADA',
             metaX: 2300,
             enemyPositions: [
-                { x: 850, y: 430 },
-                { x: 1300, y: 430 },
-                { x: 1750, y: 430 }
+                { x: 650, y: 430 },
+                { x: 950, y: 430 },
+                { x: 1250, y: 430 },
+                { x: 1600, y: 430 },
+                { x: 1950, y: 430 }
             ]
         });
     }

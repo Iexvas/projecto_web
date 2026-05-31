@@ -118,7 +118,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.playAnim('shoot', true);
 
         const bulletX = this.x + (this.facing === 1 ? 65 : -65);
-        const bulletY = this.y - 20;
+        const bulletY = this.y - 15;
 
         const bullet = this.bullets.get();
 
