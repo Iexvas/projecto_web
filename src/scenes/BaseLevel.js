@@ -214,6 +214,9 @@ export class BaseLevel extends Phaser.Scene {
 
 
         this.player = new Player(this, 180, 400, this.characterKey);
+
+        this.player.health = this.health;
+        this.player.maxHealth = 3;
         this.physics.add.collider(this.player, this.platforms);
 
         this.crearHUD();
