@@ -374,7 +374,8 @@ export class BaseLevel extends Phaser.Scene {
                     message: this.loadingMessage || 'MISIÓN COMPLETADA'
                 });
             } else {
-                this.scene.start('MenuScene');
+                this.guardarPuntajeFinal();
+                this.scene.start('MainMenuScene');
             }
         });
     }
@@ -596,7 +597,24 @@ export class BaseLevel extends Phaser.Scene {
         .setDepth(2000);
 
         this.time.delayedCall(3000, () => {
-            this.scene.start('MenuScene');
+            this.guardarPuntajeFinal();
+            this.scene.start('MainMenuScene');
         });
+    }
+
+    guardarPuntajeFinal() {
+        let scores = this.registry.get('highScores') || [];
+        let playerName = this.registry.get('playerName') || 'Desconocido';
+        
+        // Agregar el puntaje actual
+        scores.push({ name: playerName, score: this.score });
+        
+        // Ordenar de mayor a menor
+        scores.sort((a, b) => b.score - a.score);
+        
+        // Mantener solo un historial razonable, ej: 10 mejores
+        // scores = scores.slice(0, 10);
+        
+        this.registry.set('highScores', scores);
     }
 }

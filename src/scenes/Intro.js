@@ -31,7 +31,7 @@ export class Intro extends Phaser.Scene {
         });
 
         video.once('complete', () => {
-            this.scene.start('MenuScene');
+            this.scene.start('MainMenuScene');
         });
 
         // Reproducir el audio de introducción sincronizado con el video
@@ -42,7 +42,7 @@ export class Intro extends Phaser.Scene {
         this.input.keyboard.once('keydown-ENTER', () => {
             video.stop();
             introAudio.stop();
-            this.scene.start('MenuScene');
+            this.scene.start('MainMenuScene');
         });
 
         // this.input.once('pointerdown', () => {

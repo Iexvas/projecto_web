@@ -186,7 +186,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             if (this.scene.gameOver) {
                 this.scene.gameOver();
             } else {
-                this.scene.scene.start('MenuScene');
+                this.scene.scene.start('MainMenuScene');
             }
         });
     }

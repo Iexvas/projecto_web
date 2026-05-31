@@ -24,6 +24,17 @@ export class MenuScene extends Phaser.Scene {
     create() {
         this.cameras.main.setBackgroundColor('#000000');
 
+        // Obtener el nombre del jugador guardado
+        const playerName = this.registry.get('playerName') || 'JUGADOR';
+
+        // Mostrar nombre del jugador
+        this.add.text(400, 30, `Jugador: ${playerName}`, {
+            fontSize: '18px',
+            fontFamily: 'Papyrus',
+            fill: '#ffaa00',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
+
         this.add.text(390, 105, 'ELIGE A TÚ REPRESENTANTE', {
             fontSize: '23px',
             fontFamily: 'Papyrus',
