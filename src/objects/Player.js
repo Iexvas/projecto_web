@@ -141,13 +141,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         });
     }
 
-    die() {
-        if (this.isDead) return;
-
-        this.isDead = true;
-        this.setVelocity(0, 0);
-        this.playAnim('death', true);
-    }
 
     takeDamage(amount = 1) {
         if (this.isDead || this.isInvulnerable) return;
