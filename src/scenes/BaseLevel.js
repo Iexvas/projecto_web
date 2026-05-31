@@ -11,7 +11,7 @@ import heartIcon from '../assets/tiles/heart.png';
 import scoreIcon from '../assets/tiles/score.png';
 
 // Efectos de sonido mission complete, mission y game over
-import sfxInicio from '../assets/audio/mission.mp3';
+// import sfxInicio from '../assets/audio/mission.mp3';
 import sfxCompletado from '../assets/audio/mission_complete.mp3';
 import sfxGameOver from '../assets/audio/grito.mp3';
 
@@ -92,7 +92,7 @@ export class BaseLevel extends Phaser.Scene {
         this.load.audio(this.musicKey, this.musicFile);
         
         // Cargar efectos de sonido
-        this.load.audio('sfx_inicio', sfxInicio);
+        // this.load.audio('sfx_inicio', sfxInicio);
         this.load.audio('sfx_completado', sfxCompletado);
         this.load.audio('sfx_gameover', sfxGameOver);
 
@@ -154,15 +154,15 @@ export class BaseLevel extends Phaser.Scene {
             volume: 0.35
         });
 
-        this.time.delayedCall(7000, () => {
+        this.time.delayedCall(100, () => {
             this.musicaNivel.play();
         });
 
         // Reproducir efectos de sonido
         // Al iniciar el nivel
-        this.time.delayedCall(500, () => {
-            this.sound.play('sfx_inicio', { volume: 0.6 });
-        });
+        // this.time.delayedCall(500, () => {
+        //     this.sound.play('sfx_inicio', { volume: 0.6 });
+        // });
 
         this.platforms = this.physics.add.staticGroup();
          
