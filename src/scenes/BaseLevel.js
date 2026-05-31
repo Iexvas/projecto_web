@@ -10,16 +10,36 @@ import enemyMachete from '../assets/enemies/enemy_machete.png';
 import heartIcon from '../assets/tiles/heart.png';
 import scoreIcon from '../assets/tiles/score.png';
 
+// Efectos de sonido mission complete, mission y game over
+import sfxInicio from '../assets/audio/mission.mp3';
+import sfxCompletado from '../assets/audio/mission_complete.mp3';
+import sfxGameOver from '../assets/audio/grito.mp3';
+
+// Importar los personaes
+// Importar Eloy Alfaro
 import eloyIdle from '../assets/characters/eloy/eloy_idle.png';
 import eloyRun from '../assets/characters/eloy/eloy_run.png';
 import eloyJump from '../assets/characters/eloy/eloy_jump.png';
 import eloyShoot from '../assets/characters/eloy/eloy_shoot.png';
 import eloyDeath from '../assets/characters/eloy/eloy_death.png';
-
-// Efectos de sonido mission complete, mission y game over
-import sfxInicio from '../assets/audio/mission.mp3';
-import sfxCompletado from '../assets/audio/mission_complete.mp3';
-import sfxGameOver from '../assets/audio/grito.mp3';
+// Importar Gabriel García Moreno
+import gabrielIdle from '../assets/characters/gabriel/gabriel_idle.png';
+import gabrielRun from '../assets/characters/gabriel/gabriel_run.png';
+import gabrielJump from '../assets/characters/gabriel/gabriel_jump.png';
+import gabrielShoot from '../assets/characters/gabriel/gabriel_shoot.png';
+import gabrielDeath from '../assets/characters/gabriel/gabriel_death.png';
+// Importar Abdala Bucaram
+import abdalaIdle from '../assets/characters/abdala/abdala_idle.png';
+import abdalaRun from '../assets/characters/abdala/abdala_run.png';
+import abdalaJump from '../assets/characters/abdala/abdala_jump.png';
+import abdalaShoot from '../assets/characters/abdala/abdala_shoot.png';
+import abdalaDeath from '../assets/characters/abdala/abdala_death.png';
+// Importar Jaime Roldós Aguilera
+import jaimeIdle from '../assets/characters/jaime/jaime_idle.png';
+import jaimeRun from '../assets/characters/jaime/jaime_run.png';
+import jaimeJump from '../assets/characters/jaime/jaime_jump.png';
+import jaimeShoot from '../assets/characters/jaime/jaime_shoot.png';
+import jaimeDeath from '../assets/characters/jaime/jaime_death.png';
 
 export class BaseLevel extends Phaser.Scene {
     constructor(config) {
@@ -50,16 +70,14 @@ export class BaseLevel extends Phaser.Scene {
         const personajes = ['gabriel', 'abdala', 'eloy', 'jaime'];
         this.characterKey = personajes[this.soldadoElegido] || 'eloy';
 
-        this.characterKey = 'eloy';
+        // this.characterKey = 'eloy';
 
         this.score = data.score ?? 0;
         this.health = data.health ?? 3;
         this.nivelCompletado = false;
         
-        this.soldadoElegido = data.soldadoElegido ?? 2;
-        this.message = data.message || 'CARGANDO MISIÓN...';
-
-        
+        // this.soldadoElegido = data.soldadoElegido ?? 2;
+        this.message = data.message || 'CARGANDO MISIÓN...';       
     }
 
     preload() {
@@ -86,30 +104,62 @@ export class BaseLevel extends Phaser.Scene {
         this.load.image('heart_icon', heartIcon);
         this.load.image('score_icon', scoreIcon);
 
-        this.load.spritesheet('eloy_idle_sheet', eloyIdle, {
-            frameWidth: 512,
-            frameHeight: 512
+        this.cargarSpritesPersonaje('eloy', {
+            idle: eloyIdle,
+            run: eloyRun,
+            jump: eloyJump,
+            shoot: eloyShoot,
+            death: eloyDeath
         });
 
-        this.load.spritesheet('eloy_run_sheet', eloyRun, {
-            frameWidth: 512,
-            frameHeight: 512
+        this.cargarSpritesPersonaje('gabriel', {
+            idle: gabrielIdle,
+            run: gabrielRun,
+            jump: gabrielJump,
+            shoot: gabrielShoot,
+            death: gabrielDeath
         });
 
-        this.load.spritesheet('eloy_jump_sheet', eloyJump, {
-            frameWidth: 512,
-            frameHeight: 512
+        this.cargarSpritesPersonaje('abdala', {
+            idle: abdalaIdle,
+            run: abdalaRun,
+            jump: abdalaJump,
+            shoot: abdalaShoot,
+            death: abdalaDeath
         });
 
-        this.load.spritesheet('eloy_shoot_sheet', eloyShoot, {
-            frameWidth: 512,
-            frameHeight: 512
+        this.cargarSpritesPersonaje('jaime', {
+            idle: jaimeIdle,
+            run: jaimeRun,
+            jump: jaimeJump,
+            shoot: jaimeShoot,
+            death: jaimeDeath
         });
 
-        this.load.spritesheet('eloy_death_sheet', eloyDeath, {
-            frameWidth: 512,
-            frameHeight: 512
-        });
+        // this.load.spritesheet('eloy_idle_sheet', eloyIdle, {
+        //     frameWidth: 512,
+        //     frameHeight: 512
+        // });
+
+        // this.load.spritesheet('eloy_run_sheet', eloyRun, {
+        //     frameWidth: 512,
+        //     frameHeight: 512
+        // });
+
+        // this.load.spritesheet('eloy_jump_sheet', eloyJump, {
+        //     frameWidth: 512,
+        //     frameHeight: 512
+        // });
+
+        // this.load.spritesheet('eloy_shoot_sheet', eloyShoot, {
+        //     frameWidth: 512,
+        //     frameHeight: 512
+        // });
+
+        // this.load.spritesheet('eloy_death_sheet', eloyDeath, {
+        //     frameWidth: 512,
+        //     frameHeight: 512
+        // });
     }
 
     create() {
@@ -403,12 +453,48 @@ export class BaseLevel extends Phaser.Scene {
         }
     }
 
+    cargarSpritesPersonaje(nombre, sprites) {
+        this.load.spritesheet(`${nombre}_idle_sheet`, sprites.idle, {
+            frameWidth: 512,
+            frameHeight: 512
+        });
+
+        this.load.spritesheet(`${nombre}_run_sheet`, sprites.run, {
+            frameWidth: 512,
+            frameHeight: 512
+        });
+
+        this.load.spritesheet(`${nombre}_jump_sheet`, sprites.jump, {
+            frameWidth: 512,
+            frameHeight: 512
+        });
+
+        this.load.spritesheet(`${nombre}_shoot_sheet`, sprites.shoot, {
+            frameWidth: 512,
+            frameHeight: 512
+        });
+
+        this.load.spritesheet(`${nombre}_death_sheet`, sprites.death, {
+            frameWidth: 512,
+            frameHeight: 512
+        });
+    }
+
     crearAnimaciones() {
-        this.crearAnimacionSiNoExiste('eloy_idle', 'eloy_idle_sheet', 0, 3, 5, -1);
-        this.crearAnimacionSiNoExiste('eloy_run', 'eloy_run_sheet', 0, 5, 10, -1);
-        this.crearAnimacionSiNoExiste('eloy_jump', 'eloy_jump_sheet', 0, 2, 8, 0);
-        this.crearAnimacionSiNoExiste('eloy_shoot', 'eloy_shoot_sheet', 0, 3, 14, 0);
-        this.crearAnimacionSiNoExiste('eloy_death', 'eloy_death_sheet', 0, 3, 6, 0);
+        const personajes = ['gabriel', 'abdala', 'eloy', 'jaime'];
+
+        personajes.forEach((personaje) => {
+            this.crearAnimacionSiNoExiste(`${personaje}_idle`, `${personaje}_idle_sheet`, 0, 3, 5, -1);
+            this.crearAnimacionSiNoExiste(`${personaje}_run`, `${personaje}_run_sheet`, 0, 5, 10, -1);
+            this.crearAnimacionSiNoExiste(`${personaje}_jump`, `${personaje}_jump_sheet`, 0, 2, 8, 0);
+            this.crearAnimacionSiNoExiste(`${personaje}_shoot`, `${personaje}_shoot_sheet`, 0, 3, 14, 0);
+            this.crearAnimacionSiNoExiste(`${personaje}_death`, `${personaje}_death_sheet`, 0, 3, 6, 0);
+        });
+        // this.crearAnimacionSiNoExiste('eloy_idle', 'eloy_idle_sheet', 0, 3, 5, -1);
+        // this.crearAnimacionSiNoExiste('eloy_run', 'eloy_run_sheet', 0, 5, 10, -1);
+        // this.crearAnimacionSiNoExiste('eloy_jump', 'eloy_jump_sheet', 0, 2, 8, 0);
+        // this.crearAnimacionSiNoExiste('eloy_shoot', 'eloy_shoot_sheet', 0, 3, 14, 0);
+        // this.crearAnimacionSiNoExiste('eloy_death', 'eloy_death_sheet', 0, 3, 6, 0);
     }
 
     crearAnimacionSiNoExiste(key, texture, start, end, frameRate, repeat) {
