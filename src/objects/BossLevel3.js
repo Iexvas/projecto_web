@@ -93,21 +93,42 @@ export class BossLevel3 extends Phaser.Physics.Arcade.Sprite {
     }
 
     chooseAttack() {
-        const distance = Phaser.Math.Distance.Between(
-            this.x,
-            this.y,
-            this.player.x,
-            this.player.y
-        );
+        if (!this.player || this.player.isDead) return;
 
-        if (distance < 180) {
-            this.staffAttack();
+        const distanceX = Math.abs(this.x - this.player.x);
+
+        // Si el jugador está cerca, prioriza bastón
+        if (distanceX < 260) {
+            const randomClose = Phaser.Math.Between(1, 100);
+
+            if (randomClose <= 70) {
+                this.staffAttack();
+            } else {
+                this.jumpAttack();
+            }
+
             return;
         }
 
-        const randomAttack = Phaser.Math.Between(1, 2);
+        // A media distancia, mezcla bastón con salto si se acerca mucho
+        if (distanceX < 430) {
+            const randomMid = Phaser.Math.Between(1, 100);
 
-        if (randomAttack === 1) {
+            if (randomMid <= 35) {
+                this.staffAttack();
+            } else if (randomMid <= 70) {
+                this.minigunAttack();
+            } else {
+                this.jumpAttack();
+            }
+
+            return;
+        }
+
+        // Lejos: metralleta o salto
+        const randomFar = Phaser.Math.Between(1, 100);
+
+        if (randomFar <= 65) {
             this.minigunAttack();
         } else {
             this.jumpAttack();
@@ -115,42 +136,65 @@ export class BossLevel3 extends Phaser.Physics.Arcade.Sprite {
     }
 
     staffAttack() {
-        if (this.isDead) return;
+        if (this.isDead || !this.player) return;
 
         this.isAttacking = true;
         this.setVelocityX(0);
+
+        const direction = this.player.x < this.x ? -1 : 1;
+        this.setFlipX(direction === -1);
+
         this.play('boss_staff', true);
 
-        this.scene.time.delayedCall(450, () => {
+        // Pequeño aviso visual del rango del golpe
+        const warningX = this.x + (direction * 105);
+        const warning = this.scene.add.rectangle(
+            warningX,
+            this.y + 45,
+            180,
+            170,
+            0xffaa00,
+            0.22
+        );
+
+        warning.setDepth(18);
+
+        this.scene.tweens.add({
+            targets: warning,
+            alpha: 0,
+            duration: 420,
+            onComplete: () => warning.destroy()
+        });
+
+        // El daño ocurre después de la anticipación, para que sea esquivable
+        this.scene.time.delayedCall(480, () => {
             if (this.isDead || !this.player || this.player.isDead) return;
 
-            const distance = Phaser.Math.Distance.Between(
-                this.x,
-                this.y,
-                this.player.x,
-                this.player.y
-            );
+            const distanceX = Math.abs(this.x - this.player.x);
+            const distanceY = Math.abs(this.y - this.player.y);
 
-            if (distance < 210) {
+            if (distanceX < 260 && distanceY < 190) {
                 this.player.takeDamage(1);
 
                 if (this.player.x < this.x) {
-                    this.player.setVelocityX(-300);
+                    this.player.setVelocityX(-360);
                 } else {
-                    this.player.setVelocityX(300);
+                    this.player.setVelocityX(360);
                 }
 
-                this.player.setVelocityY(-250);
+                this.player.setVelocityY(-280);
             }
         });
 
-        this.scene.time.delayedCall(900, () => {
-            this.isAttacking = false;
+        this.scene.time.delayedCall(950, () => {
+            if (!this.isDead) {
+                this.isAttacking = false;
+            }
         });
     }
 
     minigunAttack() {
-        if (this.isDead) return;
+        if (this.isDead || !this.player) return;
 
         this.isAttacking = true;
         this.setVelocityX(0);
@@ -159,34 +203,67 @@ export class BossLevel3 extends Phaser.Physics.Arcade.Sprite {
         const direction = this.player.x < this.x ? -1 : 1;
         this.setFlipX(direction === -1);
 
-        for (let i = 0; i < 6; i++) {
-            this.scene.time.delayedCall(i * 170, () => {
-                if (!this.isDead) {
-                    this.shootBullet(direction);
+        // Dispara una ráfaga, pero no todos van perfectos al jugador
+        for (let i = 0; i < 7; i++) {
+            this.scene.time.delayedCall(i * 155, () => {
+                if (!this.isDead && this.player && !this.player.isDead) {
+                    this.shootBullet(direction, i);
                 }
             });
         }
 
-        this.scene.time.delayedCall(1300, () => {
-            this.isAttacking = false;
+        this.scene.time.delayedCall(1350, () => {
+            if (!this.isDead) {
+                this.isAttacking = false;
+            }
         });
     }
 
-    shootBullet(direction) {
+    shootBullet(direction, bulletIndex = 0) {
         const bullet = this.bossBullets.get();
 
-        if (!bullet) return;
+        if (!bullet || !this.player) return;
 
-        const bulletX = this.x + (direction === 1 ? 130 : -130);
-        const bulletY = this.y - 70 + Phaser.Math.Between(-18, 18);
+        const bulletX = this.x + (direction === 1 ? 115 : -115);
+
+        // Antes estaba muy arriba. Ahora sale más cerca del centro del arma/cuerpo.
+        const bulletY = this.y - 20;
 
         bullet.setTexture('boss_bullet');
         bullet.enableBody(true, bulletX, bulletY, true, true);
         bullet.body.allowGravity = false;
+
         bullet.setDepth(25);
-        bullet.setVelocityX(520 * direction);
-        bullet.setVelocityY(Phaser.Math.Between(-20, 20));
+        bullet.setScale(1.15);
+
+        // Apunta hacia una zona aproximada del cuerpo del jugador.
+        // No apunta perfecto para que sea esquivable.
+        const targetX = this.player.x;
+
+        // El player tiene sprite grande; este punto suele quedar entre torso/cadera.
+        const targetY = this.player.y - 35;
+
+        const dx = targetX - bulletX;
+        const dy = targetY - bulletY;
+
+        const angle = Math.atan2(dy, dx);
+
+        // Variación controlada:
+        // algunos tiros van al cuerpo, otros un poco arriba/abajo.
+        const spreadPattern = [-0.10, 0.02, 0.12, -0.04, 0.08, -0.14, 0.00];
+        const spread = spreadPattern[bulletIndex % spreadPattern.length];
+
+        const finalAngle = angle + spread;
+
+        const speed = 400;
+
+        bullet.setVelocityX(Math.cos(finalAngle) * speed);
+        bullet.setVelocityY(Math.sin(finalAngle) * speed);
+
         bullet.body.setSize(18, 8);
+
+        // Rotar visualmente la bala hacia donde viaja
+        bullet.setRotation(finalAngle);
     }
 
     jumpAttack() {
@@ -283,6 +360,8 @@ export class BossLevel3 extends Phaser.Physics.Arcade.Sprite {
         if (this.isDead || this.isInvulnerable) return;
 
         this.health -= amount;
+        this.health = Phaser.Math.Clamp(this.health, 0, this.maxHealth);
+        this.updateHealthBar();
 
         this.isInvulnerable = true;
         this.setTint(0xff5555);
@@ -298,6 +377,7 @@ export class BossLevel3 extends Phaser.Physics.Arcade.Sprite {
 
         if (this.health <= 0) {
             this.health = 0;
+            this.updateHealthBar();
             this.die();
         }
     }
@@ -331,22 +411,28 @@ export class BossLevel3 extends Phaser.Physics.Arcade.Sprite {
         if (this.scene.textures.exists('boss_bullet')) return;
 
         const graphics = this.scene.make.graphics({ x: 0, y: 0, add: false });
+
         graphics.fillStyle(0xff3333, 1);
         graphics.fillRect(0, 0, 18, 8);
+
         graphics.generateTexture('boss_bullet', 18, 8);
         graphics.destroy();
     }
 
     createHealthBar() {
-        this.healthBarBg = this.scene.add.rectangle(400, 35, 360, 22, 0x000000);
+        this.healthBarMaxWidth = 350;
+
+        this.healthBarBg = this.scene.add.rectangle(225, 35, 360, 22, 0x000000);
+        this.healthBarBg.setOrigin(0, 0.5);
         this.healthBarBg.setScrollFactor(0);
         this.healthBarBg.setDepth(3000);
 
-        this.healthBar = this.scene.add.rectangle(400, 35, 350, 14, 0xff2222);
+        this.healthBar = this.scene.add.rectangle(230, 35, this.healthBarMaxWidth, 14, 0xff2222);
+        this.healthBar.setOrigin(0, 0.5);
         this.healthBar.setScrollFactor(0);
         this.healthBar.setDepth(3001);
 
-        this.healthText = this.scene.add.text(400, 58, 'BOSS FINAL', {
+        this.healthText = this.scene.add.text(400, 58, `BOSS FINAL ${this.health}/${this.maxHealth}`, {
             fontSize: '18px',
             fontFamily: 'Papyrus',
             fill: '#ffffff',
@@ -360,8 +446,14 @@ export class BossLevel3 extends Phaser.Physics.Arcade.Sprite {
     updateHealthBar() {
         if (!this.healthBar) return;
 
-        const percentage = Phaser.Math.Clamp(this.health / this.maxHealth, 0, 1);
-        this.healthBar.width = 350 * percentage;
+        const currentHealth = Phaser.Math.Clamp(this.health, 0, this.maxHealth);
+        const percentage = currentHealth / this.maxHealth;
+
+        this.healthBar.setScale(percentage, 1);
+
+        if (this.healthText) {
+            this.healthText.setText(`BOSS FINAL ${currentHealth}/${this.maxHealth}`);
+        }
     }
 
     destroyHealthBar() {

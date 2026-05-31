@@ -395,15 +395,13 @@ export class BaseLevel extends Phaser.Scene {
     enemigoTocaJugador(player, enemy) {
         if (!player || !enemy || enemy.isDead) return;
 
-        player.takeDamage(1);
-
+        // El daño principal lo maneja Enemy.attack()
+        // Esto solo empuja un poco para que no se queden pegados.
         if (player.x < enemy.x) {
-            player.setVelocityX(-220);
+            player.setVelocityX(-120);
         } else {
-            player.setVelocityX(220);
+            player.setVelocityX(120);
         }
-
-        player.setVelocityY(-180);
 
         this.actualizarHUD();
     }

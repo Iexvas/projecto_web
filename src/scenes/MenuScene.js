@@ -98,13 +98,16 @@ export class MenuScene extends Phaser.Scene {
             a: Phaser.Input.Keyboard.KeyCodes.A,
             d: Phaser.Input.Keyboard.KeyCodes.D,
             enter: Phaser.Input.Keyboard.KeyCodes.ENTER,
-            espacio: Phaser.Input.Keyboard.KeyCodes.SPACE
+            espacio: Phaser.Input.Keyboard.KeyCodes.SPACE,
+
+
+                // Función secreta para devs: ir directo al boss del nivel 3
+            nivel3Dev: Phaser.Input.Keyboard.KeyCodes.THREE
         });
         
     }
 
     update() {
-        // Lógica para mover la selección a la izquierda
         if (Phaser.Input.Keyboard.JustDown(this.teclas.izq) || Phaser.Input.Keyboard.JustDown(this.teclas.a)) {
             if (this.seleccionActual > 0) {
                 this.seleccionActual--;
@@ -112,15 +115,18 @@ export class MenuScene extends Phaser.Scene {
             }
         }
 
-        // Lógica para mover la selección a la derecha
         if (Phaser.Input.Keyboard.JustDown(this.teclas.der) || Phaser.Input.Keyboard.JustDown(this.teclas.d)) {
-            if (this.seleccionActual < 3) { // 3 porque tenemos 4 soldados (0, 1, 2, 3)
+            if (this.seleccionActual < 3) {
                 this.seleccionActual++;
                 this.actualizarSeleccion();
             }
         }
 
-        // Lógica para confirmar la selección y empezar el juego
+        // DEV: saltar directo al nivel 3
+        if (Phaser.Input.Keyboard.JustDown(this.teclas.nivel3Dev)) {
+            this.irNivel3Dev();
+        }
+
         if (Phaser.Input.Keyboard.JustDown(this.teclas.enter) || Phaser.Input.Keyboard.JustDown(this.teclas.espacio)) {
             this.iniciarJuego();
         }
@@ -157,6 +163,24 @@ export class MenuScene extends Phaser.Scene {
         // Esperar un momento para que se escuche el sonido antes de cambiar de escena
         this.time.delayedCall(2000, () => {
             this.scene.start('Level1', { soldadoElegido: this.seleccionActual });
+        });
+    }
+
+
+    irNivel3Dev() {
+        if (this.musicaMenu) {
+            this.musicaMenu.stop();
+        }
+
+        if (this.sonidoSeleccion) {
+            this.sonidoSeleccion.play();
+        }
+
+        this.scene.start('Level3', {
+            soldadoElegido: this.seleccionActual,
+            score: 0,
+            health: 3,
+            message: 'DEV TEST - NIVEL 3'
         });
     }
 }
