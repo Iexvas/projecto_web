@@ -1,68 +1,107 @@
 # Proyecto Web - Juego en Phaser
 
-Este es un juego de plataformas 2D desarrollado en JavaScript utilizando el motor web [Phaser 4](https://phaser.io/) y [Vite](https://vitejs.dev/) como herramienta de compilación en el entorno de desarrollo.
+Este proyecto es un juego de plataformas 2D desarrollado en JavaScript con [Phaser 4](https://phaser.io/) y [Vite](https://vitejs.dev/). El flujo actual incluye pantalla de inicio, menú principal, captura del nombre del jugador, selección del personaje, niveles jugables, pausa y pantalla de puntajes.
 
 ## Guía de Ejecución
 
-Para iniciar este proyecto en un entorno local, es necesario contar con [Node.js](https://nodejs.org/) instalado. Siga estos pasos:
+Para ejecutar el proyecto en un entorno local, es necesario tener instalado [Node.js](https://nodejs.org/). Después, siga estos pasos:
 
-1. Clonar o descargar el código fuente del repositorio.
-2. Abrir la terminal ubicándose en el directorio principal del proyecto (`projecto_web`).
-3. Instalar las dependencias del proyecto ejecutando:
+1. Abra una terminal en la carpeta raíz del proyecto `projecto_web`.
+2. Instale las dependencias:
    ```bash
    npm install
    ```
-4. Iniciar el servidor local de desarrollo:
+3. Inicie el servidor de desarrollo:
    ```bash
    npm run dev
    ```
-5. Acceder a la URL local proporcionada en la terminal, por defecto suele ser `http://localhost:5173/`, a través de un navegador web para ejecutar el programa.
+4. Abra en el navegador la dirección local que indique Vite, normalmente `http://localhost:5173/`.
+
+Para generar una versión optimizada para producción:
+
+```bash
+npm run build
+```
+
+Para previsualizar la compilación generada:
+
+```bash
+npm run preview
+```
 
 ## Controles
 
-El juego permite la interacción mediante el teclado, soportando tanto el bloque de flechas direccionales como la configuración de teclas WASD clásicas.
+El juego utiliza teclado para navegar por los menús y para controlar al personaje durante la partida.
 
-* Movimiento lateral (Izquierda/Derecha): `A` / `D` o `Flecha Izquierda` / `Flecha Derecha`
+### Menú principal
+
+* Mover selección: `Flecha Arriba` / `Flecha Abajo`
+* Confirmar opción: `Enter`
+
+### Captura de nombre
+
+* Escribir nombre: letras, números, espacio y los caracteres `-` y `_`
+* Borrar carácter: `Backspace`
+* Confirmar nombre: `Enter`
+
+### Selección de personaje
+
+* Mover selección: `Flecha Izquierda` / `Flecha Derecha` o `A` / `D`
+* Confirmar selección: `Enter` o `Espacio`
+
+### Jugabilidad
+
+* Moverse: `A` / `D` o `Flecha Izquierda` / `Flecha Derecha`
 * Saltar: `W` o `Flecha Arriba`
 * Disparar: `Z` o `J`
-* Comprobación de estado final (Acción de Debug): `K`
+* Prueba de muerte: `K`
+* Pausa: desde la lógica del nivel se activa mediante el sistema de pausa incluido en cada escena
 
 ## Estructura del Proyecto
 
-El código está organizado de manera que separa recursos, lógica de personajes, configuraciones globales y escenas del ciclo de vida del juego:
+El código está organizado para separar el punto de entrada, los recursos, la lógica de entidades y las escenas del juego:
 
 ```text
 projecto_web/
-├── package.json         # Dependencias y scripts del proyecto (Vite, Phaser)
-├── index.html           # Punto de entrada HTML principal
-├── public/              # Archivos estáticos de acceso público
+├── package.json
+├── index.html
+├── public/
 └── src/
-    ├── main.js          # Configuración inicial del juego, motor de físicas y declaración de escenas
-    ├── style.css        # Estilos generales para márgenes y contenedor del lienzo
-    ├── assets/          # Todos los recursos multimedia y datos de diseño
-    │   ├── audio/       # Pistas de música y efectos de sonido
-    │   ├── characters/  # Hojas de sprites de personajes (Abdala, Eloy, Gabriel, Jaime)
-    │   ├── enemies/     # Sprites y animaciones de enemigos
-    │   ├── levels/      # Estructuras de los niveles en formato de datos
-    │   ├── menu/        # Recursos gráficos para menús
-    │   ├── objects/     # Sprites de entidades interactivas (municiones, objetos de escenario)
-    │   ├── tiles/       # Tilesets del mapa
-    │   └── ui/          # Elementos y componentes de interfaces gráficas
-    ├── objects/         # Clases que abstraen la lógica y manejo de entidades
-    │   ├── Enemy.js     # Lógica e Inteligencia Artificial inicial de los enemigos
-    │   └── Player.js    # Físicas, controles, gestión de salud y animaciones del usuario
-    └── scenes/          # Escenas de Phaser (Manejo de estados y flujo de ejecución)
-        ├── BaseLevel.js # Estratificación de la clase base común para los distintos niveles (Herencia)
-        ├── Intro.js     # Secuencia introductoria
-        ├── MenuScene.js # Interfaz inicial y menú principal
-        ├── LoadingScene.js # Gestor de recursos entre escenarios
-        ├── Level1.js    # Escenario Nivel 1
-        ├── Level2.js    # Escenario Nivel 2
-        ├── Level3.js    # Escenario Nivel 3
-        └── Pause.js     # Sistema de interrupción, menú de pausa
+    ├── main.js
+    ├── style.css
+    ├── assets/
+    │   ├── audio/
+    │   ├── characters/
+    │   │   ├── abdala/
+    │   │   ├── eloy/
+    │   │   ├── gabriel/
+    │   │   └── jaime/
+    │   ├── enemies/
+    │   ├── levels/
+    │   ├── menu/
+    │   ├── objects/
+    │   ├── tiles/
+    │   └── ui/
+    ├── objects/
+    │   ├── Enemy.js
+    │   └── Player.js
+    └── scenes/
+        ├── BaseLevel.js
+        ├── GameOverScene.js
+        ├── Intro.js
+        ├── Level1.js
+        ├── Level2.js
+        ├── Level3.js
+        ├── LoadingScene.js
+        ├── MainMenuScene.js
+        ├── MenuScene.js
+        ├── Pause.js
+        ├── PlayerNameScene.js
+        └── ScoresScene.js
 ```
 
 ## Créditos
 
-* **Autores:** Ismael Freire, Jorge Torres, Alexis Vasco
-* **Tecnologías empleadas:** Phaser 4.1.0 y Vite 8.0.12.
+* **Autores del proyecto:** Ismael Freire, Jorge Torres, Alexis Vasco
+* **Motor de juego:** Phaser 4.1.0
+* **Herramienta de desarrollo y compilación:** Vite 8.0.12

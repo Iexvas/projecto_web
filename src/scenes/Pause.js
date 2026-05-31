@@ -23,7 +23,7 @@ export class Pause extends Phaser.Scene {
             fill: '#ffffff'
         }).setOrigin(0.5);
 
-        // 2. Configurar las opciones del menú
+        // Configurar las opciones del menú
         this.opciones = ['REANUDAR', 'REINICIAR NIVEL', 'SELECCIÓN DE PERSONAJE'];
         this.textosOpciones = [];
         this.seleccionActual = 0;
@@ -40,7 +40,7 @@ export class Pause extends Phaser.Scene {
 
         this.actualizarVisualizacion();
 
-        // 3. Controles de teclado
+        // Controles de teclado
         this.teclas = this.input.keyboard.addKeys({
             arriba: Phaser.Input.Keyboard.KeyCodes.UP,
             abajo: Phaser.Input.Keyboard.KeyCodes.DOWN,
