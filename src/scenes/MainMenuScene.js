@@ -28,8 +28,8 @@ export class MainMenuScene extends Phaser.Scene {
         this.textosOpciones = [];
 
         // Crear textos de opciones
-        const posicionYInicial = 200;
-        const espacioEntreOpciones = 90;
+        const posicionYInicial = 220;
+        const espacioEntreOpciones = 50;
 
         this.opciones.forEach((opcion, index) => {
             const posY = posicionYInicial + (index * espacioEntreOpciones);
@@ -91,8 +91,8 @@ export class MainMenuScene extends Phaser.Scene {
             }
         });
 
-        const posicionYInicial = 200;
-        const espacioEntreOpciones = 90;
+        const posicionYInicial = 230;
+        const espacioEntreOpciones = 50;
         const nuevaY = posicionYInicial + (this.seleccionActual * espacioEntreOpciones);
         this.indicador.setY(nuevaY);
     }

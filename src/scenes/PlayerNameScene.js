@@ -6,7 +6,7 @@ export class PlayerNameScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('player_name_screen', '/src/assets/ui/player_name_screen.png');
+        this.load.image('player_name_screen', '/src/assets/ui/player_name_screen.jpg');
         this.load.audio('select_sound', '/src/assets/audio/seleccion.mp3');
     }
 
@@ -14,14 +14,14 @@ export class PlayerNameScene extends Phaser.Scene {
         this.cameras.main.setBackgroundColor('#000000');
 
         // Fondo
-        this.add.image(400, 300, 'player_name_screen').setOrigin(0.5);
+        this.add.image(400, 300, 'player_name_screen').setOrigin(0.5).setScale(0.8);
 
         // Variable para almacenar el nombre
         this.nombre = '';
         this.maxCaracteres = 15;
 
         // Texto del nombre que va escribiendo
-        this.textoNombre = this.add.text(400, 280, '', {
+        this.textoNombre = this.add.text(400, 240, '', {
             fontSize: '36px',
             fontFamily: 'Papyrus',
             fill: '#C9D1D9',

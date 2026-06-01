@@ -9,7 +9,7 @@ export class ScoresScene extends Phaser.Scene {
         this.cameras.main.setBackgroundColor('#000000');
 
         this.add.text(400, 100, 'PUNTAJES ACUMULADOS', {
-            fontSize: '48px',
+            fontSize: '36px',
             fontFamily: 'Papyrus',
             fill: '#ffaa00',
             fontStyle: 'bold'
